@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form method="POST" action="">
+    {% csrf_token %}
+    <input placeholder="Codigo produto" type="number" name="cdprincipal">
+    <input type="datetime" name="dtvalidade">
+    <input placeholder="Estoque" type="number" name="qtestoque">
+    <button type="submit">Enviar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <title>Sua Aplicação</title>
+</head>
+<body>
+
+<header>
+    <h1>Sua Aplicação</h1>
+</header>
+
+<main>
+    <div class="options">
+        <a href="{% url 'index' %}">Lançamento de Vencimentos</a>
+        <a href="{% url 'expiration_list' %}">Listagem de Vencimentos Ativos</a>
+        <a href="{% url 'expiration_form' %}">Comissionamento por Vendedor</a>
+    </div>
+</main>
+
+</body>
+</html>
