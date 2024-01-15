@@ -1,12 +1,24 @@
+import os
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
-from .models import Produto, Validade
-from django.shortcuts import render
+from .models import Detalhe, Validade
+from django.shortcuts import redirect, render
 from django.db.models import Q
 from .forms import ValidadeForm
-import json
+from DbConnectPostgres import DbConnectPostgres
 
 def index(request):
+    
+    db_alterdata = DbConnectPostgres(
+            os.environ['HOST'],
+            os.environ['PORT'], 
+            os.environ['DBNAME'], 
+            os.environ['USER'], 
+            os.environ['PASSWD']
+        )
+    with db_alterdata.connect():
+        detalhes = db_alterdata.sqlquery('select dsdetalhe from wshop.detalhe limit 1')
+    print(detalhes)
     return HttpResponse(render(request, "index.html"))
 
 def expiration_list(request):
@@ -35,8 +47,10 @@ def expiration_list(request):
 def expiration_form(request):
 
     if request.method == 'POST':
-        form = request.POST
-        print(**form)
-        
-
+        form = ValidadeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('expiration_list')
+    else:
+        form = ValidadeForm()
     return render(request, 'expiration_form.html', {'form': form})

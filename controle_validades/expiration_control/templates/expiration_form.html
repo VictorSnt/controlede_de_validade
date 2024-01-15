@@ -3,9 +3,7 @@
 {% block content %}
 <form method="POST" action="">
     {% csrf_token %}
-    <input placeholder="Codigo produto" type="number" name="cdprincipal">
-    <input type="datetime" name="dtvalidade">
-    <input placeholder="Estoque" type="number" name="qtestoque">
-    <button type="submit">Enviar</button>
+    {{ form.as_p }}
+    <input type="submit" value="Salvar">
 </form>
 {% endblock %}

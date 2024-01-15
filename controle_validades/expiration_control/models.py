@@ -61,3 +61,13 @@ class Comissao(models.Model):
     def __str__(self):
         return f"{self.dsvendedor}: {self.vltotal}"
     
+    
+class Detalhe(models.Model):
+    iddetalhe = models.CharField(max_length=40, primary_key=True)
+    idproduto = models.CharField(max_length=40)
+    dsdetalhe = models.CharField(max_length=50)
+    cdprincipal = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = "'wshop'.'detalhe'"
+        
