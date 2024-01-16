@@ -1,24 +1,13 @@
 import os
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
-from .models import Detalhe, Validade
+from .models import Validade
 from django.shortcuts import redirect, render
 from django.db.models import Q
 from .forms import ValidadeForm
-from DbConnectPostgres import DbConnectPostgres
 
-def index(request):
-    
-    db_alterdata = DbConnectPostgres(
-            os.environ['HOST'],
-            os.environ['PORT'], 
-            os.environ['DBNAME'], 
-            os.environ['USER'], 
-            os.environ['PASSWD']
-        )
-    with db_alterdata.connect():
-        detalhes = db_alterdata.sqlquery('select dsdetalhe from wshop.detalhe limit 1')
-    print(detalhes)
+
+def index(request):  
     return HttpResponse(render(request, "index.html"))
 
 def expiration_list(request):
@@ -32,7 +21,7 @@ def expiration_list(request):
             Q(produto__dsdetalhe__icontains=search_query)
         )
 
-    paginator = Paginator(validades, 5)  
+    paginator = Paginator(validades, 3)  
     page = request.GET.get('page')
 
     try:

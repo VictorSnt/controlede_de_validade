@@ -1,25 +1,51 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <title>Sua Aplicação</title>
+    <title>Controle de validade</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            text-decoration: none;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-
-<header>
-    <h1>Sua Aplicação</h1>
-</header>
-
-<main>
-    <div class="options">
+    <div class="container">
+        <h1>Bem-vindo à controle de validade</h1>
         <a href="{% url 'index' %}">Lançamento de Vencimentos</a>
         <a href="{% url 'expiration_list' %}">Listagem de Vencimentos Ativos</a>
         <a href="{% url 'expiration_form' %}">Comissionamento por Vendedor</a>
     </div>
-</main>
-
 </body>
 </html>

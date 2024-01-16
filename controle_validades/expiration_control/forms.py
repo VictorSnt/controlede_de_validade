@@ -1,6 +1,8 @@
 from django import forms
 from django.utils import timezone
 from .models import Validade, Produto
+from .utils.database.alterdata_handler import build_connection
+
 
 class ValidadeForm(forms.ModelForm):
     cdprincipal = forms.CharField(max_length=20, required=True)
@@ -15,10 +17,18 @@ class ValidadeForm(forms.ModelForm):
             raise forms.ValidationError("Código interno do produto é obrigatório.")
 
         try:
+            if len(cdprincipal) < 6:
+                cdprincipal = '0'*(6 - len(cdprincipal)) + cdprincipal
             produto = Produto.objects.get(cdprincipal=cdprincipal)
         except Produto.DoesNotExist:
-            raise forms.ValidationError("Produto com este código interno não encontrado.")
-
+            alterdata_db = build_connection()
+            with alterdata_db.connect():
+                alterdata_produto = alterdata_db.get_product(cdprincipal)
+            
+            if not alterdata_produto:
+                raise forms.ValidationError("Produto com este código interno não encontrado.")
+            produto = Produto(**alterdata_produto[0])
+            produto.save()
         return produto
 
     def clean_dtvalidade(self):

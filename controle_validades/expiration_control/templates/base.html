@@ -5,12 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Controle de Qualidade{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyW+uWjw9eDUN7bmZJPGKqUj4I6lf5d90" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyW+uWjw9eDUN7bmZJPGKqUj4I6lf5d90" crossorigin="anonymous">
+    <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            padding-top: 56px; /* Adjusted for fixed navbar */
+            background-color: #f8f9fa; /* Light background color */
+        }
 
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .custom-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* Center content in the middle of the page */
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Add your custom styles here */
+        .link-footer {
+            color: #ffffff; /* White color for footer links */
+        }
+    </style>
 </head>
 <body>
 
@@ -18,11 +49,20 @@
         <h1 class="h3">{% block header %}Controle de Qualidade{% endblock %}</h1>
     </header>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{% url 'index' %}">Home</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <!-- Toggle button for mobile view -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Navigation buttons -->
+            <a class="btn btn-primary custom-btn" href="{% url 'index' %}">Home</a>
+            <!-- Add more navigation buttons if needed -->
+        </div>
     </nav>
 
-    <main class="container mt-4">
+    <main class="container mt-5 center-content"> <!-- Increased top margin for better spacing -->
         {% block content %}{% endblock %}
     </main>
 

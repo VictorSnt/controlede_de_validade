@@ -3,7 +3,7 @@ from typing import Any, Type
 import psycopg2
 
 
-class DbConnectPostgres:
+class AlterdataConnector:
 
     def __init__(self, host: str, port: str, dbname: str, user: str, password: str):
         self.host = host
@@ -16,7 +16,7 @@ class DbConnectPostgres:
         self.cursor = None
     
     @contextmanager
-    def connect(self) -> Type["DbConnectPostgres"]:
+    def connect(self) -> Type["AlterdataConnector"]:
         try:
             conn = psycopg2.connect(
                 host=self.host,
@@ -37,24 +37,21 @@ class DbConnectPostgres:
             self.closeconnection()
             
 
-    def sqlquery(
-            self, 
-            query: str, 
-            argumensts: bool|tuple[Any]=False, 
-            commit: bool=False) -> list[dict[str, Any]]|list[None]:
+    def get_product(self, cdprincipal: str
+        ) -> list[dict[str, Any]]|list[None]:
 
         if not self.cursor:
             raise psycopg2.Error("Você não esta conectado em nenhum banco")
     
         try:
-            if not argumensts:
-                self.cursor.execute(query)
-            else:
-                self.cursor.execute(query, argumensts)
-            
-            if commit:
-                return
-
+            if not cdprincipal.isnumeric():
+              raise ValueError("cdprincipal must bem numeric string on alterdata_connector")  
+            query = f"""
+            SELECT iddetalhe, dsdetalhe, cdprincipal FROM wshop.detalhe
+            WHERE cdprincipal = '{cdprincipal}'
+            """
+            self.cursor.execute(query, cdprincipal)
+        
             columns = [desc[0] for desc in self.cursor.description]
             rows = self.cursor.fetchall()
             results_list = [

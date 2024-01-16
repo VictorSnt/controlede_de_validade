@@ -1,20 +1,96 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="pt-br">
 
-{% block content %}
-    <form class="search-form" method="GET" action="{% url 'expiration_list' %}">
-        <div class="input-group">
-            <input class="form-control search-input" type="text" name="search" placeholder="Digite para pesquisar" />
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary search-button" type="submit">
-                    <i class="fas fa-search"></i> Pesquisar
-                </button>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Aplicação</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+    
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+    
+        .search-form {
+            margin-bottom: 20px;
+        }
+    
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    
+        .search-input {
+            flex: 1;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    
+        .search-button {
+            flex-basis: 100%;
+            border-radius: 5px;
+        }
+    
+        .validades-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    
+        .validade-card {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px;
+        }
+    
+        .new-record-card {
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            border: 2px dashed #3498db;
+            background-color: #f8f9fa;
+            margin: 10px;
+        }
+    
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Bem-vindo à Sua Aplicação</h1>
+
+        <form class="search-form" method="GET" action="{% url 'expiration_list' %}">
+            <div class="input-group">
+                <input class="form-control search-input" type="text" name="search" placeholder="Digite para pesquisar" />
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary search-button" type="submit">
+                        <i class="fas fa-search"></i> Pesquisar
+                    </button>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
 
-    <div class="validades-cards">
-        {% for validade in validades_paginadas %}
-            <div class="card mb-4 validade-card">
+        <div class="validades-cards">
+            {% for validade in validades_paginadas %}
+            <div class="card validade-card">
                 <img src="{{ validade.imagem.url }}" alt="Imagem do Produto" class="card-img-top" style="max-height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">{{ validade.produto.dsdetalhe }}</h5>
@@ -25,33 +101,33 @@
                     </ul>
                 </div>
             </div>
-        {% endfor %}
-    
-        <div class="card new-record-card mb-4" data-url="{% url 'expiration_form' %}" onclick="redirectToURL(this)">
-            <div class="card-body text-center">
-                <span style="font-size: 3em;">➕</span>
-                <p class="card-text mt-2">Adicionar Novo Registro</p>
+            {% endfor %}
+
+            <div class="card new-record-card" data-url="{% url 'expiration_form' %}" onclick="redirectToURL(this)">
+                <div class="card-body text-center">
+                    <span style="font-size: 3em;">➕</span>
+                    <p class="card-text mt-2">Adicionar Novo Registro</p>
+                </div>
             </div>
         </div>
-    </div>
-    
 
-    <div class="pagination mt-4">
-        <span class="step-links">
-            {% if validades_paginadas.has_previous %}
+        <div class="pagination mt-4">
+            <span class="step-links">
+                {% if validades_paginadas.has_previous %}
                 <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-outline-secondary">&laquo; primeira</a>
                 <a href="?page={{ validades_paginadas.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-outline-secondary">anterior</a>
-            {% endif %}
+                {% endif %}
 
-            <span class="current btn btn-outline-secondary disabled">
-                Página {{ validades_paginadas.number }} de {{ validades_paginadas.paginator.num_pages }}.
-            </span>
+                <span class="current btn btn-outline-secondary disabled">
+                    Página {{ validades_paginadas.number }} de {{ validades_paginadas.paginator.num_pages }}.
+                </span>
 
-            {% if validades_paginadas.has_next %}
+                {% if validades_paginadas.has_next %}
                 <a href="?page={{ validades_paginadas.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-outline-secondary">próxima</a>
                 <a href="?page={{ validades_paginadas.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-outline-secondary">última &raquo;</a>
-            {% endif %}
-        </span>
+                {% endif %}
+            </span>
+        </div>
     </div>
 
     <script>
@@ -62,4 +138,10 @@
             }
         }
     </script>
-{% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
