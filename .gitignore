@@ -2,3 +2,5 @@ venv/
 .env
 __pycache__/
 controle_validades/db.sqlite3
+controle_validades/.env
+controle_validades/expiration_control/static/produtos

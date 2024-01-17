@@ -64,7 +64,32 @@ class AlterdataConnector:
         except psycopg2.Error as e:
             raise e
             
+    def get_image(self, idproduto):
+        
+        if not self.cursor:
+            raise psycopg2.Error("Você não esta conectado em nenhum banco")
+    
+        try:
+            if not idproduto:
+              raise ValueError("cdprincipal must bem numeric string on alterdata_connector")  
+            query = f"""
+            SELECT foto FROM wshop.detalhefoto
+            WHERE iddetalhe = '{idproduto}'
+            """
+            self.cursor.execute(query)
+        
+            columns = [desc[0] for desc in self.cursor.description]
+            rows = self.cursor.fetchall()
+            results_list = [
+                {column: value for column, value in zip(columns, row)}
+                    for row in rows
+            ]
 
+            return results_list or []
+
+        except psycopg2.Error as e:
+            raise e
+    
     def closeconnection(self) -> None:
 
         try:

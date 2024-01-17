@@ -10,7 +10,16 @@ class ValidadeForm(forms.ModelForm):
     class Meta:
         model = Validade
         fields = ['cdprincipal', 'dtvalidade', 'qtestoque']
+        widgets = {
+            'dtvalidade': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+        }
 
+    
+    def __init__(self, *args, **kwargs):
+        super(ValidadeForm, self).__init__(*args, **kwargs)
+        self.fields['cdprincipal'].widget.attrs.update({'class': 'form-control'})
+        self.fields['qtestoque'].widget.attrs.update({'class': 'form-control'})
+        
     def clean_cdprincipal(self):
         cdprincipal = self.cleaned_data.get('cdprincipal')
         if not cdprincipal:

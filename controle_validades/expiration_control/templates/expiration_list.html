@@ -1,62 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
+    {% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sua Aplicação</title>
+    <title>Controle de Validades</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa; /* Fundo mais claro */
             margin: 0;
             padding: 0;
             height: 100%;
         }
-    
+
         .container {
-            background-color: #fff;
+            background-color: #ffffff; /* Fundo branco */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             text-align: center;
+            margin-top: 20px;
         }
-    
+
         .search-form {
             margin-bottom: 20px;
         }
-    
+
         .input-group {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
         }
-    
+
         .search-input {
             flex: 1;
             border-radius: 5px;
             margin-bottom: 10px;
         }
-    
+
         .search-button {
             flex-basis: 100%;
             border-radius: 5px;
+            background-color: #007bff; /* Azul escuro */
+            color: #fff; /* Texto branco */
         }
-    
+
         .validades-cards {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
-    
+
         .validade-card {
             width: 100%;
             max-width: 300px;
             margin: 10px;
+            background-color: #ffffff; /* Fundo branco */
+            border: 1px solid #ced4da; /* Borda cinza */
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
         }
-    
+
+        .validade-card:hover {
+            transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+        }
+
         .new-record-card {
             cursor: pointer;
             width: 100%;
@@ -64,8 +76,13 @@
             border: 2px dashed #3498db;
             background-color: #f8f9fa;
             margin: 10px;
+            transition: transform 0.3s ease-in-out;
         }
-    
+
+        .new-record-card:hover {
+            transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+        }
+
         .pagination {
             margin-top: 20px;
             text-align: center;
@@ -75,7 +92,7 @@
 
 <body>
     <div class="container">
-        <h1>Bem-vindo à Sua Aplicação</h1>
+        <h1 id="welcome-heading" style="color: #007bff; cursor: pointer;">Bem-vindo</h1>
 
         <form class="search-form" method="GET" action="{% url 'expiration_list' %}">
             <div class="input-group">
@@ -91,7 +108,7 @@
         <div class="validades-cards">
             {% for validade in validades_paginadas %}
             <div class="card validade-card">
-                <img src="{{ validade.imagem.url }}" alt="Imagem do Produto" class="card-img-top" style="max-height: 200px; object-fit: cover;">
+                <img src="{% static 'produtos/'|add:validade.produto.iddetalhe|add:'.jpg' %}" alt="Imagem do Produto" class="card-img-top" style="max-height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">{{ validade.produto.dsdetalhe }}</h5>
                     <ul class="list-group list-group-flush">
@@ -137,6 +154,11 @@
                 window.location.href = url;
             }
         }
+    </script>
+    <script>
+        document.getElementById("welcome-heading").addEventListener("click", function() {
+            window.location.href = "{% url 'index' %}";
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
