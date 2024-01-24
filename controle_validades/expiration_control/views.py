@@ -1,14 +1,19 @@
-import json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse
-from .models import Validade, Produto
 from django.shortcuts import redirect, render
-from django.db.models import Q
-from .forms import ValidadeForm
-from .utils.database.alterdata_handler import build_connection
+from django.http import HttpResponse
 from django.conf import settings
+from django.db.models import Q
+from .utils.database.alterdata_handler import build_connection
+from .models import Validade, Produto, Detalhe
+from .forms import ValidadeForm
+
+
+import json
+
 
 def index(request):  
+    detalhes = Detalhe.objects.using('alterdata').all()[:5]
+    print(detalhes)
     return HttpResponse(render(request, "index.html"))
 
 def expiration_list(request):

@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'controle_validades.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'grup3999_controle_de_qualidade',
+        'USER': 'grup3999_ti_construfacil',
+        'PASSWORD': 'essaeaminhasenhadobancodedadosdaempresaconstrufacil',
+        'HOST': 'grupoconstrufacil.com.br',
+        'PORT': '3306',
     },
     'alterdata': {
         'ENGINE': 'django.db.backends.postgresql',

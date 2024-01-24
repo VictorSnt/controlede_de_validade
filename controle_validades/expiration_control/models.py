@@ -1,4 +1,4 @@
-from .model.comissao import Comissao
-from .model.produto import Produto
-from .model.validade import Validade
-  
+from .model.controle_validades.comissao import Comissao
+from .model.controle_validades.produto import Produto
+from .model.controle_validades.validade import Validade
+from .model.aleterdata.detalhe import Detalhe
