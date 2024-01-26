@@ -34,18 +34,22 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task',
     'expiration_control.apps.ExpirationControlConfig',
     
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -54,6 +58,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
 
 ROOT_URLCONF = 'controle_validades.urls'
 
@@ -76,18 +88,28 @@ TEMPLATES = [
 WSGI_APPLICATION = 'controle_validades.wsgi.application'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_PORT = os.environ['EMAIL_PORT'] 
+EMAIL_USE_TLS = False 
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER'] 
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'grup3999_controle_de_qualidade',
-        'USER': 'grup3999_ti_construfacil',
-        'PASSWORD': 'essaeaminhasenhadobancodedadosdaempresaconstrufacil',
-        'HOST': 'grupoconstrufacil.com.br',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     },
+    # 'default': {
+    # 'NAME': os.environ['DBNAME_PRODUCTION'],
+    # 'USER': os.environ['USER_PRODUCTION'],
+    # 'PASSWORD': os.environ['PASSWD_PRODUCTION'],
+    # 'HOST': os.environ['HOST_PRODUCTION'],  
+    # 'PORT': os.environ['PORT_PRODUCTION'],
+    # },
     'alterdata': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ['DBNAME'],

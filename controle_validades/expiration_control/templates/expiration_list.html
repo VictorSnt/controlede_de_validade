@@ -94,7 +94,7 @@
     <div class="container">
         <h1 id="welcome-heading" style="color: #007bff; cursor: pointer;">Bem-vindo</h1>
 
-        <form class="search-form" method="GET" action="{% url 'expiration_list' %}">
+        <form class="search-form" method="GET" action="{% url 'display_expirations' %}">
             <div class="input-group">
                 <input class="form-control search-input" type="text" name="search" placeholder="Digite para pesquisar" />
                 <div class="input-group-append">
@@ -120,7 +120,7 @@
             </div>
             {% endfor %}
 
-            <div class="card new-record-card" data-url="{% url 'expiration_form' %}" onclick="redirectToURL(this)">
+            <div class="card new-record-card" data-url="{% url 'display_expirations' %}" onclick="redirectToURL(this)">
                 <div class="card-body text-center">
                     <span style="font-size: 3em;">➕</span>
                     <p class="card-text mt-2">Adicionar Novo Registro</p>

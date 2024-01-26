@@ -1,7 +1,8 @@
 from django import forms
 from django.utils import timezone
-from .models import Validade, Produto
-from .utils.database.alterdata_handler import build_connection
+from django.forms.models import model_to_dict
+from .models import Validade, Produto, Detalhe
+
 
 
 class ValidadeForm(forms.ModelForm):
@@ -30,13 +31,12 @@ class ValidadeForm(forms.ModelForm):
                 cdprincipal = '0'*(6 - len(cdprincipal)) + cdprincipal
             produto = Produto.objects.get(cdprincipal=cdprincipal)
         except Produto.DoesNotExist:
-            alterdata_db = build_connection()
-            with alterdata_db.connect():
-                alterdata_produto = alterdata_db.get_product(cdprincipal)
+            alterdata_produto = Detalhe.objects.using('alterdata').get(cdprincipal=cdprincipal)
             
             if not alterdata_produto:
                 raise forms.ValidationError("Produto com este código interno não encontrado.")
-            produto = Produto(**alterdata_produto[0])
+            dict_detalhe = model_to_dict(alterdata_produto)
+            produto = Produto(**dict_detalhe)
             produto.save()
         return produto
 
