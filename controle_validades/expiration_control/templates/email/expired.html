@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #343a40;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e2e6ea;
+        }
+
+        .expired {
+            background-color: #ff1e1e;
+            color: #fff;
+        }
+    </style>
+    <title>Relatório de Produtos Vencidos</title>
+</head>
+<body>
+
+<div class="container">
+    <h2>Relatório de Produtos Vencidos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Data de Validade</th>
+                <th>Quantidade em Estoque</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in vencidos %}
+                <tr {% if item.dtvalidade <= today %}class="expired"{% endif %}>
+                    <td>{{ item.produto.dsdetalhe }}</td>
+                    <td>{{ item.dtvalidade }}</td>
+                    <td>{{ item.qtestoque }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
