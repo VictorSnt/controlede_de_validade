@@ -29,14 +29,14 @@ class ValidadeForm(forms.ModelForm):
         try:
             if len(cdprincipal) < 6:
                 cdprincipal = '0'*(6 - len(cdprincipal)) + cdprincipal
-            produto = Produto.objects.get(cdprincipal=cdprincipal)
-        except Produto.DoesNotExist:
+            produto = Product.objects.get(cdprincipal=cdprincipal)
+        except Product.DoesNotExist:
             alterdata_produto = Detalhe.objects.using('alterdata').get(cdprincipal=cdprincipal)
             
             if not alterdata_produto:
                 raise forms.ValidationError("Produto com este código interno não encontrado.")
             dict_detalhe = model_to_dict(alterdata_produto)
-            produto = Produto(**dict_detalhe)
+            produto = Product(**dict_detalhe)
             produto.save()
         return produto
 
