@@ -5,13 +5,13 @@ se hover na observação a key="promo victor"
 e lancar a venda na tabela comissao fazer verificação de devolução e cancelamento
 """
 
-alarme_de_aviso_validade = """
+alarme_de_aviso_validade = """ #done
 enviar email quando produtos estiverem procimos do vencimento
 """
 
-cadastrar_vencidos_nosistema="""
+cadastrar_vencidos_nosistema=""" #done
 verificar se todos os vencimentos ativos
-estao com os respectivos produtos com (PROMO)
+estao com os respectivos produtos com |PROMO
 na descrição e tambem se os vencimentos inativos estao sem
 """
 

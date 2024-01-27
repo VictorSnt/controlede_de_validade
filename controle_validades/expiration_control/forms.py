@@ -4,7 +4,6 @@ from django.forms.models import model_to_dict
 from .models import Validade, Product, Detalhe
 
 
-
 class ValidadeForm(forms.ModelForm):
     cdprincipal = forms.CharField(max_length=20, required=True)
 

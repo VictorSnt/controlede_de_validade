@@ -1,7 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
 from django.db.models import Q
-from django.views import View
 
 from ..forms import ValidadeForm
 from ..models import Validade
@@ -25,6 +24,7 @@ class ExpirationDisplayer(ViewHandler):
         self.search_query = self.get_search_or_blank()
 
     def get_search_or_blank(self) -> str:
+        
         return self.request.GET.get('search', '')
 
     def filter_validades(self, validades, search_query):
