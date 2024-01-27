@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 products_dir = settings.STATICFILES_DIRS[1]
-class Produto(models.Model):
+class Product(models.Model):
     iddetalhe = models.CharField(max_length=20, primary_key=True, unique=True)
     cdprincipal = models.CharField(max_length=20, unique=True)
     dsdetalhe = models.CharField(max_length=40, null=False)

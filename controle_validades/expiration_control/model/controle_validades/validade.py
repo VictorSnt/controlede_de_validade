@@ -1,9 +1,9 @@
 from django.db import models
-from .produto import Produto
+from .product import Product
 
 class Validade(models.Model):
     idvalidade = models.AutoField(primary_key=True)
-    produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Product, on_delete=models.CASCADE)
     dtvalidade = models.DateField(null=False)
     qtestoque = models.IntegerField(null=False)
     stativo = models.BooleanField(default=True)

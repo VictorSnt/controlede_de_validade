@@ -1,5 +1,5 @@
 from django.db import models
-from .produto import Produto
+from .product import Product
 
 
 class Comissao(models.Model):
@@ -7,7 +7,7 @@ class Comissao(models.Model):
     iddocumento = models.CharField(max_length=20, unique=True)
     iddocumentoitem = models.CharField(max_length=20, unique=True)
     cdorcamento = models.CharField(max_length=20, unique=True)
-    cdprincipal = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    cdprincipal = models.ForeignKey(Product, on_delete=models.CASCADE)
     cdchamada = models.CharField(max_length=20, null=False)
     dsvendedor = models.CharField(max_length=80, null=False)
     vltotal = models.FloatField(null=False)
