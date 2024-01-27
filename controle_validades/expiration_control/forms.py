@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 from django.forms.models import model_to_dict
-from .models import Validade, Produto, Detalhe
+from .models import Validade, Product, Detalhe
 
 
 
