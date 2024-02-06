@@ -39,7 +39,7 @@ def add_promo_tag():
         if '|PROMO' in detalhe.dsdetalhe:
             continue
         try:
-            detalhe.dsdetalhe = '|PROMO'+ detalhe.dsdetalhe
+            detalhe.dsdetalhe += ' |PROMO'
             produto.nmproduto = detalhe.dsdetalhe
             detalhe.save()
             produto.save()

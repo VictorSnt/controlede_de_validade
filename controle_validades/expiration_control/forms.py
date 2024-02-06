@@ -11,7 +11,7 @@ class ValidadeForm(forms.ModelForm):
         model = Validade
         fields = ['cdprincipal', 'dtvalidade', 'qtestoque']
         widgets = {
-            'dtvalidade': forms.DateInput(attrs={'class': 'form-control datepicker'}),
+            'dtvalidade': forms.DateInput(attrs={'class': 'form-control datepicker', 'type': 'date'}),
         }
 
     
@@ -34,8 +34,11 @@ class ValidadeForm(forms.ModelForm):
             
             if not alterdata_produto:
                 raise forms.ValidationError("Produto com este código interno não encontrado.")
-            dict_detalhe = model_to_dict(alterdata_produto)
-            produto = Product(**dict_detalhe)
+            
+            produto = Product(
+                iddetalhe=alterdata_produto.iddetalhe, cdprincipal=alterdata_produto.cdprincipal,
+                dsdetalhe=alterdata_produto.dsdetalhe
+            )
             produto.save()
         return produto
 

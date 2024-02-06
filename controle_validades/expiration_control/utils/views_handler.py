@@ -71,7 +71,7 @@ class ExpirationSaver(ViewHandler):
             form = ValidadeForm(self.request.POST)
             if form.is_valid():
                 form.save()
-                return redirect('expiration_list')
+                return redirect('display_expirations')
         else:
             form = ValidadeForm()
         return render(self.request, 'expiration_form.html', {'form': form})
