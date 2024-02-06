@@ -1,5 +1,5 @@
 from django.db import models
-
+from .detalhe import Detalhe
 
 class DetalheFoto(models.Model):
     
@@ -8,7 +8,7 @@ class DetalheFoto(models.Model):
         managed = False
         
     iddetalhefoto = models.CharField(max_length=40, primary_key=True)
-    iddetalhe = models.CharField(max_length=40, null=True, blank=True)
+    iddetalhe = models.ForeignKey(Detalhe, related_name='detalhefoto', on_delete=models.DO_NOTHING)
     dsfoto = models.CharField(max_length=50, null=True, blank=True)
     stprincipal = models.BooleanField(null=True, blank=True)
     stlojavirtual = models.BooleanField(null=True, blank=True)

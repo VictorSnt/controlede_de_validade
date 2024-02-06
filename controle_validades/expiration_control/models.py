@@ -5,3 +5,4 @@ from .model.aleterdata.detalhe import Detalhe
 from .model.aleterdata.produto import Produto
 from .model.aleterdata.documento import Documento
 from .model.aleterdata.produto_log import ProdutoLog
+from .model.aleterdata.documento_item import DocumentoItem

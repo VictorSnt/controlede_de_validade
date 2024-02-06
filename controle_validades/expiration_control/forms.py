@@ -39,16 +39,6 @@ class ValidadeForm(forms.ModelForm):
             produto.save()
         return produto
 
-    def clean_dtvalidade(self):
-        dtvalidade = self.cleaned_data.get('dtvalidade')
-        if not dtvalidade:
-            raise forms.ValidationError("Data de validade é obrigatória.")
-
-        if dtvalidade < timezone.now().date():
-            raise forms.ValidationError("A data deve ser posterior a data de hoje.")
-
-        return dtvalidade
-
     def clean_qtestoque(self):
         qtestoque = self.cleaned_data.get('qtestoque')
         if qtestoque is None or qtestoque <= 0:

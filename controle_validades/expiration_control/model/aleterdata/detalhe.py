@@ -1,4 +1,5 @@
 from django.db import models
+from .produto import Produto
 
 
 class Detalhe(models.Model):
@@ -8,7 +9,7 @@ class Detalhe(models.Model):
         managed = False 
         
     iddetalhe = models.CharField(max_length=40, primary_key=True)
-    idproduto = models.CharField(max_length=40, null=True, blank=True)
+    idproduto = models.CharField(max_length=40,)
     idcaracteristica = models.CharField(max_length=40, null=True, blank=True)
     dsdetalhe = models.CharField(max_length=50, null=True, blank=True)
     iddetgradeh = models.CharField(max_length=40, null=True, blank=True)

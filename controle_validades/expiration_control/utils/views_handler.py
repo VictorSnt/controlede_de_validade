@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from django.db.models import Q
 
 from ..forms import ValidadeForm
-from ..models import Validade
+from ..models import Validade, Product
 
 
 class ViewHandler:
@@ -66,7 +66,7 @@ class ExpirationSaver(ViewHandler):
     def __init__(self, request):
         self.request = request
     
-    def validate_form(self):     
+    def validate_form(self):
         if self.request.method == 'POST':
             form = ValidadeForm(self.request.POST)
             if form.is_valid():

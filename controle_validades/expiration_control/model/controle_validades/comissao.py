@@ -4,10 +4,10 @@ from .product import Product
 
 class Comissao(models.Model):
     idcomissao = models.AutoField(primary_key=True)
-    iddocumento = models.CharField(max_length=20, unique=True)
-    iddocumentoitem = models.CharField(max_length=20, unique=True)
-    cdorcamento = models.CharField(max_length=20, unique=True)
-    cdprincipal = models.ForeignKey(Product, on_delete=models.CASCADE)
+    iddocumento = models.CharField(max_length=40)
+    iddocumentoitem = models.CharField(max_length=40)
+    cdorcamento = models.CharField(max_length=20)
+    produto = models.ForeignKey(Product, on_delete=models.CASCADE)
     cdchamada = models.CharField(max_length=20, null=False)
     dsvendedor = models.CharField(max_length=80, null=False)
     vltotal = models.FloatField(null=False)
