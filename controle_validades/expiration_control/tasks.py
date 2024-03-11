@@ -1,21 +1,20 @@
-from django.forms import model_to_dict
 from .utils.email import EmailHandler
-from background_task import background
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from django.db import DataError, connections
-from django.utils import timezone
 from .models import Validade, Produto, Detalhe, Comissao, Product
-from django.db.models import Sum
 from django.core.mail import EmailMultiAlternatives
+import pandas as pd
 
-@background(schedule=1)
+
+
 def notify_expiration(): 
-    print('email')
-    validades = Validade.objects.all().order_by('dtvalidade')
+    validades = Validade.objects.all().order_by(
+        'dtvalidade', 'produto__dsdetalhe'
+    )
     today = datetime.today().date()
     limit_day = today + timedelta(days=120)
     vencidos = [val for val in validades if val.dtvalidade <= limit_day]
-    recipients = ['thanatsuv3@gmail.com']
+    recipients = ['thanatsuv3@gmail.com', 'viviannepimenta@grupoconstrufacil.com.br']
     subject = 'Produtos Vencidos e proximos de vencer'
     email = EmailHandler(recipients, vencidos, today, subject)
     email.send_email()
@@ -26,12 +25,12 @@ def notify_expiration():
     #     print(f"cdchamada: {item['cdchamada']}, soma de vltotal: {item['soma_vltotal']}")
 
 
-@background(schedule=1)
 def add_promo_tag():
-    errors = []
+    errors_log = []
     today = datetime.today().date()
     limit_day = today + timedelta(days=90)
     validades = Validade.objects.filter(dtvalidade__lte=limit_day)
+    
     for validade in validades:
         iddetalhe = validade.produto.iddetalhe
         detalhe = Detalhe.objects.using('alterdata').get(iddetalhe=iddetalhe)
@@ -44,9 +43,9 @@ def add_promo_tag():
             detalhe.save()
             produto.save()
         except DataError:
-            errors.append(detalhe)
+            errors_log.append(detalhe)
     body = 'Erros \n'
-    for det in errors:
+    for det in errors_log:
         body+= f'{det.dsdetalhe} tem a descrição muito grande, ajustar e colocar "|PROMO" manualmente\n'
     msg = EmailMultiAlternatives(
             f'Erro ao adicionar produtos nas promoções',
@@ -56,17 +55,28 @@ def add_promo_tag():
     msg.send()
     print('error mail sended')
     
-
-@background(schedule=1)
-def update_db():
-    
+def remove_promo_tag():
+    validades = Validade.objects.filter(qtestoque__lte=0, stativo=True)
+    for validade in validades:
+        validade.stativo = False
+        iddetalhe = validade.produto.iddetalhe
+        detalhe = Detalhe.objects.using('alterdata').get(iddetalhe=iddetalhe)
+        produto = Produto.objects.using('alterdata').get(idproduto=detalhe.idproduto)
+        detalhe.dsdetalhe = detalhe.dsdetalhe.replace('|PROMO', '')
+        produto.nmproduto = produto.nmproduto.replace('|PROMO', '')
+        validade.save()
+        produto.save()
+        detalhe.save()
+        
+def update_sales():
     connection = connections['alterdata']
     with connection.cursor() as cursor: 
         sql_query = """
             SELECT item.iddetalhe, item.iddocumentoitem,
             item.qtitem, item.vlunitario, item.vldesconto,
             det.vlpermarkup, det.cdprincipal, doc.cdorcamento,
-            pes.nmpessoa, pes.cdchamada, doc.iddocumento, det.dsdetalhe
+            pes.nmpessoa, pes.cdchamada, doc.iddocumento, det.dsdetalhe,
+            doc.dsobservacao
             FROM docitem as item
             JOIN documen as doc on doc.iddocumento = item.iddocumento
             JOIN detalhe as det on det.iddetalhe = item.iddetalhe
@@ -86,7 +96,7 @@ def update_db():
     margem = False
     promo_sales = []
     for row in results_list:
-        if keyword in row['dsdetalhe']:
+        if keyword in row['dsdetalhe'] and keyword in row['dsobservacao']:
             comissao = {}
             if not row['vldesconto']:
                 margem = 0.30
@@ -102,6 +112,13 @@ def update_db():
             if not margem:
                 raise ValueError('Commisao sempre deveria ter margem')
             else:
+                
+                validades = Validade.objects.filter(
+                    stativo=True, produto__cdprincipal=row['cdprincipal']
+                )
+                if not validades.exists():
+                    raise ValueError('esse produto não esta na lista de validades')
+                    
                 comissao['iddocumentoitem'] = row['iddocumentoitem']
                 comissao['iddocumento'] = row['iddocumento']
                 comissao['cdorcamento'] = row['cdorcamento']
@@ -110,13 +127,92 @@ def update_db():
                 comissao['cdchamada'] = row['cdchamada']
                 comissao['vltotal'] = row['vlunitario'] * (row['vlpermarkup'] / 100) * margem
                 promo_sales.append(comissao)
+                validade_filtradas = []
+                soma_validades_qtestoque = 0
+                for validade in validades:
+                    soma_validades_qtestoque += validade.qtestoque
+                    
+                if soma_validades_qtestoque < row['qtitem']:
+                    raise ValueError("row['qtitem'] deveria ser meno do que a soma de validades")
+                
+                for validade in validade_filtradas:
+                    
+                    if (row['qtitem'] - validade.qtestoque) > 0:
+                        row['qtitem'] -= validade.qtestoque
+                        validade.qtestoque =- validade.qtestoque
+                    else: 
+                        validade.qtestoque -= row['qtitem']
+                    validade.save()
+    
     final_result = [promo for promo in promo_sales if not Comissao.objects.filter(
         iddocumento=promo['iddocumento'], iddocumentoitem=promo['iddocumentoitem'],
         produto=promo['produto']
         ).exists()]
+    
     if final_result:
         Comissao.objects.bulk_create([Comissao(**promo) for promo in promo_sales])
     
-update_db()
-notify_expiration()
-add_promo_tag()
+
+
+def salvar_vencidos():
+    with open('ven.txt', 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    try:
+        for line in lines:
+       
+            produto = Product.objects.get(cdprincipal=line.split(':')[0].strip())
+            instance = Validade(
+                produto=produto,
+                dtvalidade=datetime.strptime(line.split(':')[1].strip(), '%d/%m/%y'),
+                qtestoque=int(line.split(':')[2].strip()),
+            )
+            instance.save()
+    except Product.DoesNotExist:
+        alterdata_produto = Detalhe.objects.using('alterdata').get(cdprincipal=line.split(':')[0].strip())
+        produto = Product(
+                iddetalhe=alterdata_produto.iddetalhe, cdprincipal=alterdata_produto.cdprincipal,
+                dsdetalhe=alterdata_produto.dsdetalhe
+            )
+        produto.save()
+        instance = Validade(
+                produto=produto,
+                dtvalidade=datetime.strptime(line.split(':')[1].strip(), '%d/%m/%y'),
+                qtestoque=int(line.split(':')[2].strip()),
+            )
+        
+def gerar_relatorio():
+    validades = Validade.objects.all().order_by(
+        'dtvalidade', 'produto__dsdetalhe'
+    )
+    today = datetime.today().date()
+    vencidos = [val for val in validades if val.dtvalidade <= today]
+    
+    # Cria uma lista de dicionários, onde cada dicionário contém os dados que você quer
+    dados = [{
+        'dtvalidade': val.dtvalidade,
+        'cdprincipal': val.produto.cdprincipal,
+        'dsdetalhe': val.produto.dsdetalhe
+    } for val in vencidos]
+
+    for dado in dados:
+        
+        det = Detalhe.objects.using('alterdata').get(cdprincipal=dado['cdprincipal'])
+        prod = Produto.objects.using('alterdata').get(idproduto=det.idproduto)
+        
+        preco_venda = det.vlprecovenda
+
+        # Margem de lucro em porcentagem
+        margem_lucro_percentual = det.allucro
+
+        # Convertendo a porcentagem de lucro para um fator multiplicador
+        fator_multiplicador = 1 + (margem_lucro_percentual / 100)
+
+        # Calculando o custo
+        custo = preco_venda / fator_multiplicador
+
+        dado['custo'] =  custo
+        dado['tributação'] = prod.tributacao
+        
+    df = pd.DataFrame(dados)
+
+    df.to_excel('relatorio.xlsx')

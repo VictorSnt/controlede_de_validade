@@ -8,7 +8,7 @@ def index(request):
     http_response = display_menu.render_menu()
     return http_response
 
-@cache_page(60 * 15)
+
 def display_expirations(request):
     
     handler = ExpirationDisplayer(request)

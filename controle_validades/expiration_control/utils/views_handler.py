@@ -1,9 +1,9 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect, render
 from django.db.models import Q
-
 from ..forms import ValidadeForm
 from ..models import Validade, Product
+
 
 
 class ViewHandler:
