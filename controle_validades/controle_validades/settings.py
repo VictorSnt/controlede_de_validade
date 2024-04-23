@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'background_task',
     'expiration_control.apps.ExpirationControlConfig',
     
 ]
@@ -58,13 +57,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
 ]
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '127.0.0.1:11211',
-    }
-}
 
 
 ROOT_URLCONF = 'controle_validades.urls'
@@ -103,13 +95,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / "db.sqlite3",
     },
-    # 'default': {
-    # 'NAME': os.environ['DBNAME_PRODUCTION'],
-    # 'USER': os.environ['USER_PRODUCTION'],
-    # 'PASSWORD': os.environ['PASSWD_PRODUCTION'],
-    # 'HOST': os.environ['HOST_PRODUCTION'],  
-    # 'PORT': os.environ['PORT_PRODUCTION'],
-    # },
+    
     'alterdata': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ['DBNAME_ALTERDATA'],

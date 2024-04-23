@@ -1,6 +1,4 @@
 from django.db import models
-from .produto import Produto
-
 
 class Detalhe(models.Model):
     

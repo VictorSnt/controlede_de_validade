@@ -35,7 +35,7 @@ class ExpirationDisplayer(ViewHandler):
             Q(produto__dsdetalhe__icontains=search_query)
         )
 
-    def get_paginated_validades(self, validades, page_size=3):
+    def get_paginated_validades(self, validades, page_size=7):
         paginator = Paginator(validades, page_size)
         page = self.request.GET.get('page')
 
@@ -50,11 +50,10 @@ class ExpirationDisplayer(ViewHandler):
 
     def get_filtered_and_paginated_validades(self):
         validades = Validade.objects.order_by('dtvalidade').all()
-
+        
         if self.search_query:
             validades = self.filter_validades(validades, self.search_query)
         validades_paginadas = self.get_paginated_validades(validades)
-        
         return render(
         self.request, 'expiration_list.html', 
         {'validades_paginadas': validades_paginadas}

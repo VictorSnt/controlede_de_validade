@@ -4,47 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de validade</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
             background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-        }
-
-        a {
-            display: block;
-            margin: 10px 0;
-            padding: 10px;
-            text-decoration: none;
-            background-color: #3498db;
-            color: #fff;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        a:hover {
-            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Bem-vindo à controle de validade</h1>
-        <a href="{% url 'add_expiration' %}">Lançamento de Vencimentos</a>
-        <a href="{% url 'display_expirations' %}">Listagem de Vencimentos Ativos</a>
+        <div class="jumbotron">
+            <h1 class="display-4 text-center">Bem-vindo ao controle de validade</h1>
+            <p class="lead text-center">Escolha uma opção abaixo:</p>
+            <div class="row justify-content-center">
+                <div class="col-10 col-md-6 mb-3">
+                    <a class="btn btn-primary btn-lg btn-block" href="{% url 'add_expiration' %}" role="button">Registrar Vencimento</a>
+                </div>
+                <div class="col-10 col-md-6">
+                    <a class="btn btn-primary btn-lg btn-block" href="{% url 'display_expirations' %}" role="button">Listar Vencimentos</a>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
